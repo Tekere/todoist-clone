@@ -1,32 +1,182 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+  <div>
+    <nav class="uk-navbar-container uk-margin" uk-navbar id="nav">
+      <div class="uk-navbar-left">
+        <div>
+          <a
+            class="uk-navbar-toggle"
+            uk-navbar-toggle-icon
+            href=""
+            @click.prevent="toggleNav"
+          ></a>
+        </div>
+
+        <ul class="uk-navbar-nav">
+          <li>
+            <a href="/">
+              <span
+                class="uk-icon uk-margin-small-right"
+                uk-icon="icon: home"
+              ></span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="uk-navbar-item">
+          <input
+            class="uk-input uk-form-width-medium"
+            type="text"
+            placeholder="Search"
+          />
+        </div>
+      </div>
+    </nav>
+    <div>
+      <transition tag="div" name="slideX">
+        <div class="uk-width-1-4@s side-nav" v-show="isNavShow">
+          <ul class="uk-nav-default uk-nav-parent-icon" uk-nav>
+            <li class="uk-active">
+              <router-link to="/">インボックス</router-link>
+            </li>
+            <li class="uk-active">
+              <router-link to="/today">今日</router-link>
+            </li>
+            <li class="uk-active">
+              <router-link to="/fewday">近日中</router-link>
+            </li>
+            <li class="uk-parent">
+              <a href="#">プロジェクト</a>
+              <ul class="uk-nav-sub">
+                <li
+                  v-for="project in $store.state.projects"
+                  :key="project.name"
+                >
+                  <router-link :to="'/project/' + getProjectId(project.name)">{{
+                    project.fields.title.stringValue
+                  }}</router-link>
+                </li>
+              </ul>
+            </li>
+            <li class="uk-nav-divider"></li>
+          </ul>
+        </div>
+      </transition>
+
+      <router-view id="container" />
     </div>
-    <router-view />
   </div>
 </template>
 
+<script>
+export default {
+  data() {
+    return {
+      isNavShow: true,
+    };
+  },
+  methods: {
+    toggleNav() {
+      this.isNavShow = !this.isNavShow;
+    },
+    // プロジェクトのIDを取得するメソッド
+    getProjectId(projectId) {
+      let result = projectId.split("/");
+      result = result[result.length - 1];
+      return result;
+    },
+  },
+};
+</script>
+
 <style lang="scss">
+a {
+  cursor: pointer;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Hiragino Sans";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  box-sizing: border-box;
 }
 
 #nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+  padding: 0 40px;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  color: #fff;
+  background-color: #db4c3f;
+  z-index: 2;
+  .uk-icon {
+    fill: #fff;
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+  .uk-input {
+    border-radius: 5px;
+  }
+}
+.side-nav {
+  width: 305px !important;
+  height: 100vh;
+  position: fixed;
+  top: 80px;
+  padding-left: 30px;
+  padding-top: 30px;
+  background-color: #fafafa;
+  ul {
+    height: 100%;
+    li {
+      font-size: 16px;
+      line-height: 1.7;
+      font-weight: bold;
+      padding-left: 10px;
+      margin: 3px 5px 3px 0;
+      &:nth-child(-n + 3):hover {
+        background-color: #fff;
+      }
+      a {
+      }
     }
   }
 }
+#container {
+  margin-top: 80px;
+  margin-left: 305px;
+  .header {
+    padding: 36px 55px 0 55px;
+    position: sticky;
+    z-index: 2;
+    background-color: #fff;
+    top: 80px;
+    .header-content {
+      border-bottom: 1px solid #f0f0f0;
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 700;
+    }
+  }
+  .list-editor {
+    overflow-y: auto;
+    padding: 0 55px 0;
+    ul.task-list {
+      display: block;
+      li {
+      }
+    }
+  }
+}
+.slideX-enter-active,
+.slideX-leave-active {
+  transition: transform 0.5s;
+}
+.slideX-enter,
+.slideX-leave-to {
+  transform: translateX(-100%);
+}
+// .slideX-enter-to {
+//   transform: translateX(0%);
+// }
 </style>
