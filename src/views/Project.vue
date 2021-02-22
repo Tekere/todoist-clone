@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       tasks: null,
-      projectName: "",
+      projectName: null,
     };
   },
   computed: {
@@ -34,22 +34,21 @@ export default {
     ...mapActions(["doneTask"]),
   },
   created() {
-    // タスクをコピー
-    let tasks = this.$store.state.tasks.slice();
-    this.tasks = tasks;
-
     // URLからプロジェクト名を特定する
     let path = location.pathname.split("/");
     let pathProjectId = path[path.length - 1];
-    let projects = this.$store.state.projects.slice();
-
+    let projects = this.$store.state.projectsArray;
     let result = projects.find((el) => {
-      console.log(el);
-
-      return el.name == pathProjectId;
+      return el.id == pathProjectId;
     });
-    // this.projectName = result.
-    console.log(result);
+    this.projectName = result.title;
+
+    // プロジェクトのタスクをコピー
+    let tasks = this.$store.state.tasks.slice();
+    tasks = tasks.filter((el) => {
+      return el.fields.projectId.stringValue == pathProjectId;
+    });
+    this.tasks = tasks;
   },
 };
 </script>

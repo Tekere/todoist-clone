@@ -49,8 +49,8 @@ new Vue({
         let projects = response.data.documents;
         that.$store.dispatch("setProjects", projects);
 
-        // //プロジェクトを扱いやすいよう配列にしてstateに保存;
-        // that.$store.dispatch("setProjectNames", projects);
+        //プロジェクトを扱いやすいよう配列にしてstateに保存;
+        that.$store.dispatch("setProjectsArray", projects);
         console.log("projectsSuccess");
       })
       .catch((e) => {
@@ -58,6 +58,7 @@ new Vue({
         alert(e);
       });
   },
+  methods: {},
 
   render: (h) => h(App),
 }).$mount("#app");

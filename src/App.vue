@@ -48,11 +48,11 @@
               <a href="#">プロジェクト</a>
               <ul class="uk-nav-sub">
                 <li
-                  v-for="project in $store.state.projects"
-                  :key="project.name"
+                  v-for="project in $store.state.projectsArray"
+                  :key="project.id"
                 >
-                  <router-link :to="'/project/' + getProjectId(project.name)">{{
-                    project.fields.title.stringValue
+                  <router-link :to="'/project/' + project.id">{{
+                    project.title
                   }}</router-link>
                 </li>
               </ul>
@@ -136,9 +136,10 @@ a {
       &:nth-child(-n + 3):hover {
         background-color: #fff;
       }
-      a {
-      }
     }
+  }
+  .uk-nav-sub li:first-child {
+    display: none;
   }
 }
 #container {

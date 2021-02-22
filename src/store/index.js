@@ -7,7 +7,7 @@ export default new Vuex.Store({
   state: {
     tasks: [],
     projects: [],
-    projectNames: [],
+    projectsArray: [],
   },
   mutations: {
     setTasks(state, data) {
@@ -30,11 +30,19 @@ export default new Vuex.Store({
     setProjects(state, data) {
       state.projects = data.slice();
     },
-    setProjectNames(state, data) {
-      // data = data.map((el) => {
-      //   return el.title;
-      // });
-      // state.projectNames = data;
+    setProjectsArray(state, data) {
+      // プロジェクトを扱いやすいよう {id:value, title: value}の形にして配列に格納
+      data = data.reduce((acc, el) => {
+        let obj = {};
+        let id = el.name.split("/");
+        id = id[id.length - 1];
+
+        obj.id = id;
+        obj.title = el.fields.title.stringValue;
+        acc.push(obj);
+        return acc;
+      }, []);
+      state.projectsArray = data;
     },
   },
   actions: {
@@ -47,9 +55,9 @@ export default new Vuex.Store({
     setProjects({ commit }, data) {
       commit("setProjects", data);
     },
-    // setProjectNames({ commit }, data) {
-    //   commit("setProjectNames", data);
-    // },
+    setProjectsArray({ commit }, data) {
+      commit("setProjectsArray", data);
+    },
   },
   // modules: {},
 });
