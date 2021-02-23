@@ -16,11 +16,9 @@
           <!-- 2回同じようなことをしている気がする？？ -->
           <p :class="classObj(task.fields.dueDate.timestampValue)">
             {{ convertDueDate(task.fields.dueDate.timestampValue) }}
-            <!-- <span v-if="isShowProjectName" class="projectName"
-              >・{{
-                //$store.state.projectNames[task.fields.projectId.integerValue]
-              }}</span
-            > -->
+            <span v-if="isShowProjectName" class="projectName"
+              >・{{ getProjectName(task.fields.projectId.stringValue) }}</span
+            >
           </p>
         </div>
       </div>
@@ -129,6 +127,13 @@ export default {
       } else {
         return;
       }
+    },
+    // プロジェクトの名前を特定するメソッド
+    getProjectName(id) {
+      let result = this.$store.state.projectsArray.find((el) => {
+        return el.id == id;
+      });
+      return result.title;
     },
   },
 };

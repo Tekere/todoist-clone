@@ -37,6 +37,7 @@ export default {
     // URLからプロジェクト名を特定する
     let path = location.pathname.split("/");
     let pathProjectId = path[path.length - 1];
+
     let projects = this.$store.state.projectsArray;
     let result = projects.find((el) => {
       return el.id == pathProjectId;

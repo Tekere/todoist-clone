@@ -40,7 +40,7 @@ export default {
     });
 
     this.tasks = result;
-    // console.log(tasks);
+    console.log("done");
   },
 };
 </script>

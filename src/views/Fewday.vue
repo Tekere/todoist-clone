@@ -4,6 +4,11 @@
       <div class="header-content">
         <h1>近日予定</h1>
       </div>
+      <div class="buttons">
+        <a href="" class="left-icon" uk-icon="icon: chevron-left;"></a>
+        <a href="" class="right-icon" uk-icon="icon: chevron-right;"></a>
+        <a href="">今日</a>
+      </div>
       <ul uk-tab>
         <li
           v-for="day in thisWeek"
@@ -88,6 +93,19 @@ export default {
 #container .header .header-content {
   border-bottom: none;
 }
+.left-icon,
+.right-icon {
+  // position: absolute;
+  // top: 70px;
+  // height: 15px;
+}
+.left-icon {
+  // left: 15px;
+}
+.right-icon {
+  // right: 15px;
+}
+
 .few-days {
   //
 }
@@ -96,10 +114,14 @@ export default {
 }
 .uk-tab {
   width: 100%;
+  margin-left: 0;
+
   li {
     box-sizing: border-box;
     width: calc(100% / 7);
     font-weight: 600;
+    padding-left: 0;
+
     a {
       color: black;
     }

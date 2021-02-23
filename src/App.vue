@@ -143,6 +143,7 @@ a {
   }
 }
 #container {
+  position: relative;
   margin-top: 80px;
   margin-left: 305px;
   .header {
