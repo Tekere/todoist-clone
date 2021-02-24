@@ -1,6 +1,7 @@
 <template>
   <ul class="task-list" v-if="hasTasks">
     <li class="task-item" v-for="task in tasks" :key="task.name">
+      <span class="sort-icon" uk-icon="icon: move;"></span>
       <div class="task-item-inner">
         <label class="checkBox-box">
           <input
@@ -9,7 +10,7 @@
             :checked="isDone(task)"
           />
         </label>
-        <div class="task-content" uk-toggle="target: #modal-close-default">
+        <div @click="openModal(task)" class="task-content">
           <p :class="{ 'is-done': task.fields.status.integerValue == 1 }">
             {{ task.fields.title.stringValue }}
           </p>
@@ -22,9 +23,14 @@
           </p>
         </div>
       </div>
-      <task-modal></task-modal>
     </li>
+    <task-modal
+      :task="modalTask"
+      :isShow="isOpenModal"
+      @bg-click="isOpenModal = false"
+    ></task-modal>
   </ul>
+
   <div v-else>
     <p>まだタスクが登録されていません。</p>
   </div>
@@ -48,7 +54,10 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      modalTask: null,
+      isOpenModal: false,
+    };
   },
   computed: {
     hasTasks() {
@@ -135,6 +144,12 @@ export default {
       });
       return result.title;
     },
+    openModal(task) {
+      this.isOpenModal = true;
+      this.modalTask = task;
+    },
+    // モーダルを閉じる
+    closeModal() {},
   },
 };
 </script>
@@ -145,14 +160,30 @@ export default {
 }
 .task-item {
   list-style: none;
+  position: relative;
   cursor: pointer;
-  &:hover {
+  .sort-icon {
+    display: none;
+    position: absolute;
+    left: 0.5em;
+    top: 50%;
+    transform: translateY(-50%);
   }
+  // &:hover {
+  //   .sort-icon {
+  //     display: block;
+  //     color: gray;
+  //     &:hover {
+  //       color: red;
+  //     }
+  //   }
+  // }
 }
 .task-item-inner {
   display: flex;
   position: relative;
   border-bottom: 1px solid #f0f0f0;
+  // padding-left: 35px;
 
   .checkBox-box {
     width: 2rem;

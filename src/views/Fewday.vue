@@ -5,13 +5,21 @@
         <h1>近日予定</h1>
       </div>
       <div class="buttons">
-        <a href="" class="left-icon" uk-icon="icon: chevron-left;"></a>
-        <a href="" class="right-icon" uk-icon="icon: chevron-right;"></a>
-        <a href="">今日</a>
+        <a
+          href=""
+          class="back-btn"
+          uk-icon="icon: chevron-left; ratio:1.5;"
+        ></a>
+        <a
+          href=""
+          class="next-btn"
+          uk-icon="icon: chevron-right; ratio:1.5;"
+        ></a>
+        <a class="today-btn">今日</a>
       </div>
       <ul uk-tab>
         <li
-          v-for="day in thisWeek"
+          v-for="day in selectedWeek"
           :key="day.date"
           :class="{ 'uk-active': day.isToday, disabled: day.isPast }"
         >
@@ -20,6 +28,7 @@
           >
         </li>
       </ul>
+      <!-- <pre>{{ selectedWeek }}</pre> -->
     </div>
     <div class="list-editor">
       <task-list :tasks="tasksOfSelectedDay" @done-task="doneTask"></task-list>
@@ -35,20 +44,6 @@ const todayDate = today.getDate();
 const dayNum = today.getDay();
 const thisSunday = todayDate - dayNum;
 
-// 今週を作成
-let i = 0;
-const thisWeek = DAY.reduce((acc, el) => {
-  let d = { date: thisSunday + i, day: el, isToday: false, isPast: false };
-  if (d.date == todayDate) {
-    d.isToday = true;
-  } else if (d.date < todayDate) {
-    d.isPast = true;
-  }
-  acc.push(d);
-  i++;
-  return acc;
-}, []);
-
 export default {
   components: { TaskList },
   name: "Fewdays",
@@ -56,7 +51,7 @@ export default {
     return {
       tasks: [],
       selectedDay: null,
-      thisWeek,
+      selectedWeek: null,
     };
   },
   computed: {
@@ -85,6 +80,24 @@ export default {
     let tasks = this.$store.state.tasks.slice();
     this.tasks = tasks;
     this.selectedDay = today.getDate();
+
+    let i = 0;
+    this.selectedWeek = DAY.reduce((acc, el) => {
+      let d = {
+        date: thisSunday + i,
+        day: el,
+        isToday: false,
+        isPast: false,
+      };
+      if (d.date == todayDate) {
+        d.isToday = true;
+      } else if (d.date < todayDate) {
+        d.isPast = true;
+      }
+      acc.push(d);
+      i++;
+      return acc;
+    }, []);
   },
 };
 </script>
@@ -93,24 +106,20 @@ export default {
 #container .header .header-content {
   border-bottom: none;
 }
-.left-icon,
-.right-icon {
-  // position: absolute;
-  // top: 70px;
-  // height: 15px;
-}
-.left-icon {
-  // left: 15px;
-}
-.right-icon {
-  // right: 15px;
-}
 
 .few-days {
   //
 }
 .list-editor {
   margin-top: 5%;
+}
+.buttons {
+  text-align: right;
+  a {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 1.3em;
+  }
 }
 .uk-tab {
   width: 100%;
