@@ -34,7 +34,7 @@ export default {
   },
   created() {
     // プロジェクトIDがインボックスのIDと一致するもののみにする
-    let tasks = this.$store.state.tasks.slice();
+    let tasks = this.$store.getters["tasksModule/tasks"].slice();
     let result = tasks.filter((el) => {
       return el.fields.projectId.stringValue == "RHlmhCvIUREZGEUAhGbd";
     });

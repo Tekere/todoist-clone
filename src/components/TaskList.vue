@@ -122,9 +122,11 @@ export default {
     },
     // プロジェクトの名前を特定するメソッド
     getProjectName(id) {
-      let result = this.$store.state.projectsArray.find((el) => {
-        return el.id == id;
-      });
+      let result = this.$store.getters["projectsModule/projectsArray"].find(
+        (el) => {
+          return el.id == id;
+        }
+      );
       return result.title;
     },
     openModal(task) {

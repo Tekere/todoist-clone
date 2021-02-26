@@ -77,7 +77,7 @@ export default {
   },
   created() {
     const today = new Date();
-    let tasks = this.$store.state.tasks.slice();
+    let tasks = this.$store.getters["tasksModule/tasks"].slice();
     this.tasks = tasks;
     this.selectedDay = today.getDate();
 

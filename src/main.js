@@ -39,7 +39,7 @@ const app = new Vue({
               return -1;
             }
           });
-          that.$store.dispatch("setTasks", tasks);
+          that.$store.dispatch("tasksModule/setTasks", tasks);
 
           console.log("tasksSuccess");
         })
@@ -54,10 +54,10 @@ const app = new Vue({
         )
         .then((response) => {
           let projects = response.data.documents;
-          that.$store.dispatch("setProjects", projects);
+          that.$store.dispatch("projectsModule/setProjects", projects);
 
           //プロジェクトを扱いやすいよう配列にしてstateに保存;
-          that.$store.dispatch("setProjectsArray", projects);
+          that.$store.dispatch("projectsModule/setProjectsArray", projects);
           console.log("projectsSuccess");
         })
         .catch((e) => {

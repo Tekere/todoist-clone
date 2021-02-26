@@ -30,7 +30,7 @@ export default {
     ...mapActions(["doneTask"]),
   },
   created() {
-    let tasks = this.$store.state.tasks.slice();
+    let tasks = this.$store.getters["tasksModule/tasks"].slice();
     // 今日のタスクのみにする
     const today = new Date();
     tasks = tasks.filter((el) => {
