@@ -44,19 +44,7 @@
             <li class="uk-active">
               <router-link to="/fewday">近日中</router-link>
             </li>
-            <li class="uk-parent">
-              <a href="#">プロジェクト</a>
-              <ul class="uk-nav-sub">
-                <li
-                  v-for="project in $store.state.projectsArray"
-                  :key="project.id"
-                >
-                  <router-link :to="'/project/' + project.id">{{
-                    project.title
-                  }}</router-link>
-                </li>
-              </ul>
-            </li>
+
             <li class="uk-nav-divider"></li>
           </ul>
         </div>
@@ -68,6 +56,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
@@ -77,12 +66,6 @@ export default {
   methods: {
     toggleNav() {
       this.isNavShow = !this.isNavShow;
-    },
-    // プロジェクトのIDを取得するメソッド
-    getProjectId(projectId) {
-      let result = projectId.split("/");
-      result = result[result.length - 1];
-      return result;
     },
   },
 };
@@ -165,8 +148,6 @@ a {
     padding: 0 55px 0;
     ul.task-list {
       display: block;
-      li {
-      }
     }
   }
 }

@@ -19,11 +19,6 @@ const routes = [
     name: "fewday",
     component: () => import("../views/Fewday.vue"),
   },
-  {
-    path: "/project/:id",
-    name: "project",
-    component: () => import("../views/Project.vue"),
-  },
 ];
 
 const router = new VueRouter({

@@ -1,4 +1,28 @@
 export default {
+  computed: {
+    // 期日の状態（本日、明日etc）によって表示の色を変更するためのプロパティ
+    classObj() {
+      return function(dueDate) {
+        // 期日を本日、明日、期限切れに変換
+        dueDate = this.convertDueDate(dueDate);
+
+        let resultObj = {
+          today: false,
+          tomorrow: false,
+          expired: false,
+        };
+        // 変換後の状態に応じて有効にするClassをtrueにする
+        if (dueDate == "今日") {
+          resultObj.today = true;
+        } else if (dueDate == "明日") {
+          resultObj.tomorrow = true;
+        } else if (dueDate.match(/期限切れ/)) {
+          resultObj.expired = true;
+        }
+        return resultObj;
+      };
+    },
+  },
   methods: {
     // 日付を変換するメソッド
     convertDueDate(dueDate) {
@@ -15,7 +39,7 @@ export default {
         return "明日";
       } else {
         let format = "";
-        dateD < todayD ? (format = "期限切れ(MM月DD日)") : "MM月DD日";
+        date < today ? (format = "期限切れ(MM月DD日)") : (format = "MM月DD日");
         format = format.replace(/MM/, date.getMonth() + 1);
         format = format.replace(/DD/, date.getDate());
         return format;

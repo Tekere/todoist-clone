@@ -6,7 +6,7 @@
         <label class="checkBox-box">
           <input
             type="checkbox"
-            @change="doneTask(task.name)"
+            @change="doneTask(task)"
             :checked="isDone(task)"
           />
         </label>
@@ -17,18 +17,10 @@
           <!-- 2回同じようなことをしている気がする？？ -->
           <p :class="classObj(task.fields.dueDate.timestampValue)">
             {{ convertDueDate(task.fields.dueDate.timestampValue) }}
-            <span v-if="isShowProjectName" class="projectName"
-              >・{{ getProjectName(task.fields.projectId.stringValue) }}</span
-            >
           </p>
         </div>
       </div>
     </li>
-    <task-modal
-      :task="modalTask"
-      :isShow="isOpenModal"
-      @bg-click="isOpenModal = false"
-    ></task-modal>
   </ul>
 
   <div v-else>
@@ -38,22 +30,14 @@
 
 <script>
 import Mixin from "../mixin";
-import TaskModal from "./TaskModal";
-import { mapActions } from "vuex";
+
 export default {
   // mixinsは配列で書く
   mixins: [Mixin],
-  components: {
-    TaskModal,
-  },
+
   props: {
     tasks: {
-      // type: Array,
-    },
-    // タスクの横にプロジェクトの名前を出すかどうか。インボックスなどではfalseが渡ってくる
-    isShowProjectName: {
-      type: Boolean,
-      default: true,
+      type: Array,
     },
   },
   data() {
@@ -69,32 +53,12 @@ export default {
       }
       return false;
     },
-    // 期日の状態（本日、明日etc）によって表示の色を変更するためのプロパティ
-    classObj() {
-      return function (dueDate) {
-        // 期日を本日、明日、期限切れに変換
-        dueDate = this.convertDueDate(dueDate);
-
-        let resultObj = {
-          today: false,
-          tomorrow: false,
-          expired: false,
-        };
-        // 変換後の状態に応じて有効にするClassをtrueにする
-        if (dueDate == "今日") {
-          resultObj.today = true;
-        } else if (dueDate == "明日") {
-          resultObj.tomorrow = true;
-        } else if (dueDate.match(/期限切れ/)) {
-          resultObj.expired = true;
-        }
-        return resultObj;
-      };
-    },
   },
   methods: {
     // タスクを完了とするメソッド
-    ...mapActions(["doneTask"]),
+    doneTask(task) {
+      this.$store.dispatch("tasksModule/doneTask", task);
+    },
 
     // タスクの完了未完了を見るメソッド
     isDone(task) {
@@ -120,15 +84,7 @@ export default {
         return;
       }
     },
-    // プロジェクトの名前を特定するメソッド
-    getProjectName(id) {
-      let result = this.$store.getters["projectsModule/projectsArray"].find(
-        (el) => {
-          return el.id == id;
-        }
-      );
-      return result.title;
-    },
+
     openModal(task) {
       this.isOpenModal = true;
       this.modalTask = task;
@@ -146,7 +102,7 @@ export default {
 .task-item {
   list-style: none;
   position: relative;
-  cursor: pointer;
+
   .sort-icon {
     display: none;
     position: absolute;
@@ -154,15 +110,6 @@ export default {
     top: 50%;
     transform: translateY(-50%);
   }
-  // &:hover {
-  //   .sort-icon {
-  //     display: block;
-  //     color: gray;
-  //     &:hover {
-  //       color: red;
-  //     }
-  //   }
-  // }
 }
 .task-item-inner {
   display: flex;
@@ -178,19 +125,20 @@ export default {
       position: absolute;
       top: 50%;
       left: 0;
-      transform: translateY(-50%);
+      transform: scale(1.8);
+
+      // transform: translateY(-50%);
       cursor: pointer;
     }
   }
 
   .task-content {
+    padding-left: 10px;
     width: 100%;
     p {
       margin: 0;
       line-height: 2.6;
-      &.is-done {
-        text-decoration: line-through;
-      }
+
       &.date {
         line-height: 1;
         padding-bottom: 0.5rem;
@@ -204,10 +152,6 @@ export default {
       &.expired {
         color: #d1453b;
       }
-    }
-    .projectName {
-      float: right;
-      color: #666;
     }
   }
 }
