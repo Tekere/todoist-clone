@@ -4,19 +4,7 @@
       <div class="header-content">
         <h1>近日予定</h1>
       </div>
-      <div class="buttons">
-        <a
-          href=""
-          class="back-btn"
-          uk-icon="icon: chevron-left; ratio:1.5;"
-        ></a>
-        <a
-          href=""
-          class="next-btn"
-          uk-icon="icon: chevron-right; ratio:1.5;"
-        ></a>
-        <a class="today-btn">今日</a>
-      </div>
+
       <ul uk-tab>
         <li
           v-for="day in selectedWeek"
@@ -31,18 +19,15 @@
       <!-- <pre>{{ selectedWeek }}</pre> -->
     </div>
     <div class="list-editor">
-      <task-list :tasks="tasksOfSelectedDay" @done-task="doneTask"></task-list>
+      <task-list :tasks="tasksOfSelectedDay"></task-list>
     </div>
   </div>
 </template>
 <script>
 import TaskList from "../components/TaskList.vue";
-import { mapActions } from "vuex";
 const DAY = ["日", "月", "火", "水", "木", "金", "土"];
 const today = new Date();
 const todayDate = today.getDate();
-const dayNum = today.getDay();
-const thisSunday = todayDate - dayNum;
 
 export default {
   components: { TaskList },
@@ -57,12 +42,11 @@ export default {
   computed: {
     // 選択された日のタスクを取得
     tasksOfSelectedDay() {
-      let tasks = [];
-      tasks = this.tasks;
+      let tasks = this.tasks;
       const that = this;
       let result = [];
       result = tasks.filter((el) => {
-        let taskDueDate = new Date(el.fields.dueDate.timestampValue);
+        let taskDueDate = new Date(el.dueDate.seconds * 1000);
         taskDueDate = taskDueDate.getDate();
         return taskDueDate == that.selectedDay;
       });
@@ -70,21 +54,21 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["doneTask"]),
     selectDate(val) {
       this.selectedDay = val;
     },
   },
   created() {
     const today = new Date();
-    let tasks = this.$store.getters["tasksModule/tasks"].slice();
-    this.tasks = tasks;
+    this.tasks = this.$store.getters["tasksModule/tasks"];
     this.selectedDay = today.getDate();
 
     let i = 0;
     this.selectedWeek = DAY.reduce((acc, el) => {
+      let date = new Date();
+      date.setDate(date.getDate() + i);
       let d = {
-        date: thisSunday + i,
+        date: date.getDate(),
         day: el,
         isToday: false,
         isPast: false,

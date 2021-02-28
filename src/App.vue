@@ -56,7 +56,6 @@
 </template>
 
 <script>
-import axios from "axios";
 export default {
   data() {
     return {
@@ -67,6 +66,9 @@ export default {
     toggleNav() {
       this.isNavShow = !this.isNavShow;
     },
+  },
+  created() {
+    this.$store.dispatch("tasksModule/fetchTasks");
   },
 };
 </script>

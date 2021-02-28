@@ -1,28 +1,23 @@
 <template>
   <ul class="task-list" v-if="hasTasks">
-    <li class="task-item" v-for="task in tasks" :key="task.name">
+    <li class="task-item" v-for="task in tasks" :key="task.id">
       <span class="sort-icon" uk-icon="icon: move;"></span>
       <div class="task-item-inner">
         <label class="checkBox-box">
-          <input
-            type="checkbox"
-            @change="doneTask(task)"
-            :checked="isDone(task)"
-          />
+          <input type="checkbox" @change="doneTask(task)" />
         </label>
         <div @click="openModal(task)" class="task-content">
-          <p :class="{ 'is-done': task.fields.status.integerValue == 1 }">
-            {{ task.fields.title.stringValue }}
+          <p>
+            {{ task.title }}
           </p>
           <!-- 2回同じようなことをしている気がする？？ -->
-          <p :class="classObj(task.fields.dueDate.timestampValue)">
-            {{ convertDueDate(task.fields.dueDate.timestampValue) }}
+          <p :class="classObj(task.dueDate)">
+            {{ convertDueDate(task.dueDate) }}
           </p>
         </div>
       </div>
     </li>
   </ul>
-
   <div v-else>
     <p>まだタスクが登録されていません。</p>
   </div>
@@ -61,16 +56,6 @@ export default {
     },
 
     // タスクの完了未完了を見るメソッド
-    isDone(task) {
-      // 完了ステータスをトグルする
-      switch (task.fields.status.integerValue) {
-        case "0":
-          return false;
-
-        case "1":
-          return true;
-      }
-    },
 
     // 日付から特定の条件で色分けするためのメソッド
     addClassDateColor(dueDate) {
@@ -89,8 +74,6 @@ export default {
       this.isOpenModal = true;
       this.modalTask = task;
     },
-    // モーダルを閉じる
-    closeModal() {},
   },
 };
 </script>
@@ -115,7 +98,6 @@ export default {
   display: flex;
   position: relative;
   border-bottom: 1px solid #f0f0f0;
-  // padding-left: 35px;
 
   .checkBox-box {
     width: 2rem;
@@ -126,8 +108,6 @@ export default {
       top: 50%;
       left: 0;
       transform: scale(1.8);
-
-      // transform: translateY(-50%);
       cursor: pointer;
     }
   }

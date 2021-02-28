@@ -16,12 +16,14 @@
               type="text"
               class="uk-input uk-form-width-medium"
               placeholder="タスク名"
+              v-model="formData.title"
             />
-            <input type="date" class="uk-input uk-form-width-medium" />
-            <select class="uk-select uk-form-width-medium">
-              <option value="">プロジェクト名</option>
-              <option>Option 01</option>
-            </select>
+            <input
+              type="date"
+              class="uk-input uk-form-width-medium"
+              v-model="formData.dueDate"
+            />
+
             <div class="btns">
               <button
                 @click.prevent="addTask(newTask)"
@@ -55,16 +57,19 @@ export default {
   name: "Inbox",
   data() {
     return {
-      tasks: [],
+      tasks: null,
       createFormShow: false,
+      formData: {
+        title: "",
+        dueDate: "",
+      },
     };
   },
   computed: {
     newTask() {
       return {
-        title: "ttt",
-        dueDate: "2021-02-28T00:05:19.533413Z",
-        status: "0",
+        title: this.formData.title,
+        dueDate: new Date(this.formData.dueDate),
       };
     },
   },
@@ -78,7 +83,6 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("tasksModule/setTasks");
     this.tasks = this.$store.getters["tasksModule/tasks"];
   },
 };
