@@ -6,11 +6,10 @@ const state = {
 
 const getters = {
   tasks(state) {
-    // ここでmutationするのはよくない？
     let tasks = state.tasks;
     tasks.sort((a, b) => {
-      if (a.dueDate < b.dueDate) return -1;
-      if (a.dueDate > b.dueDate) return 1;
+      if (a.data.dueDate < b.data.dueDate) return -1;
+      if (a.data.dueDate > b.data.dueDate) return 1;
     });
     return tasks;
   },
@@ -20,8 +19,13 @@ const mutations = {
   setTasks(state, data) {
     state.tasks.push(data);
   },
-  doneTask(state, data) {
-    //
+  doneTask(state, id) {
+    state.tasks = state.tasks.filter((el) => {
+      console.log(el.id);
+      console.log(id);
+      return el.id != id;
+    });
+    console.log(state.tasks);
   },
   addTask(state, newTask) {
     state.tasks.push(newTask);
@@ -29,15 +33,24 @@ const mutations = {
 };
 
 const actions = {
-  doneTask({ commit }, task) {
-    commit("doneTask", task);
+  doneTask({ commit }, { id }) {
+    firebase
+      .firestore()
+      .collection("tasks")
+      .doc(id)
+      .delete()
+      .then(() => {
+        commit("doneTask", id);
+      });
   },
   addTask({ commit }, newTask) {
     firebase
       .firestore()
       .collection("tasks")
-      .add(newTask);
-    commit("addTask", newTask);
+      .add(newTask)
+      .then((doc) => {
+        commit("addTask", { id: doc.id, data: newTask });
+      });
   },
   fetchTasks({ commit }) {
     firebase
@@ -45,7 +58,10 @@ const actions = {
       .collection("tasks")
       .get()
       .then((response) => {
-        response.forEach((doc) => commit("setTasks", doc.data()));
+        console.log(response);
+        response.forEach((doc) =>
+          commit("setTasks", { id: doc.id, data: doc.data() })
+        );
       });
   },
 };

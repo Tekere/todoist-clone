@@ -4,15 +4,16 @@
       <span class="sort-icon" uk-icon="icon: move;"></span>
       <div class="task-item-inner">
         <label class="checkBox-box">
-          <input type="checkbox" @change="doneTask(task)" />
+          <input type="checkbox" @change="doneCheck(task)" />
         </label>
+
         <div @click="openModal(task)" class="task-content">
           <p>
-            {{ task.title }}
+            {{ task.data.title }}
           </p>
           <!-- 2回同じようなことをしている気がする？？ -->
-          <p :class="classObj(task.dueDate)">
-            {{ convertDueDate(task.dueDate) }}
+          <p :class="classObj(task.data.dueDate)">
+            {{ convertDueDate(task.data.dueDate) }}
           </p>
         </div>
       </div>
@@ -51,10 +52,9 @@ export default {
   },
   methods: {
     // タスクを完了とするメソッド
-    doneTask(task) {
-      this.$store.dispatch("tasksModule/doneTask", task);
+    doneCheck(task) {
+      this.$emit("done-check", task);
     },
-
     // タスクの完了未完了を見るメソッド
 
     // 日付から特定の条件で色分けするためのメソッド

@@ -34,7 +34,7 @@ export default {
   name: "Fewdays",
   data() {
     return {
-      tasks: [],
+      tasks: this.$store.getters["tasksModule/tasks"],
       selectedDay: null,
       selectedWeek: null,
     };
@@ -46,7 +46,7 @@ export default {
       const that = this;
       let result = [];
       result = tasks.filter((el) => {
-        let taskDueDate = new Date(el.dueDate.seconds * 1000);
+        let taskDueDate = new Date(el.data.dueDate.seconds * 1000);
         taskDueDate = taskDueDate.getDate();
         return taskDueDate == that.selectedDay;
       });
@@ -60,7 +60,6 @@ export default {
   },
   created() {
     const today = new Date();
-    this.tasks = this.$store.getters["tasksModule/tasks"];
     this.selectedDay = today.getDate();
 
     let i = 0;

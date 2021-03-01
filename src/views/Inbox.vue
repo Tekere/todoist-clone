@@ -6,7 +6,10 @@
       </div>
     </div>
     <div class="list-editor">
-      <task-list :tasks="tasks"></task-list>
+      <task-list :tasks="tasks" @done-check="doneTask"></task-list>
+      <pre>{{ tasks }}</pre>
+      <pre>{{ $store.getters["tasksModule/tasks"] }}</pre>
+      <pre>{{ $store.state.tasksModule.tasks }}</pre>
     </div>
     <div class="create-editor">
       <div v-if="createFormShow" class="create-form-editor">
@@ -57,7 +60,7 @@ export default {
   name: "Inbox",
   data() {
     return {
-      tasks: null,
+      tasks: this.$store.getters["tasksModule/tasks"],
       createFormShow: false,
       formData: {
         title: "",
@@ -67,6 +70,12 @@ export default {
   },
   computed: {
     newTask() {
+      // フォームのデータからtimestampを作成  2ヶ月くらいずれる？？
+      // let date = new Date(this.formData.dueDate);
+      //     date = date.getTime();
+      //     date = Math.floor(date / 1000);
+
+      // 一時的に Date型で保存
       return {
         title: this.formData.title,
         dueDate: new Date(this.formData.dueDate),
@@ -80,10 +89,9 @@ export default {
     addTask(newTask) {
       this.$store.dispatch("tasksModule/addTask", newTask);
     },
-  },
-
-  created() {
-    this.tasks = this.$store.getters["tasksModule/tasks"];
+    doneTask(task) {
+      this.$store.dispatch("tasksModule/doneTask", task);
+    },
   },
 };
 </script>
