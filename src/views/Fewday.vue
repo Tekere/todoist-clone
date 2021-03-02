@@ -16,7 +16,6 @@
           >
         </li>
       </ul>
-      <!-- <pre>{{ selectedWeek }}</pre> -->
     </div>
     <div class="list-editor">
       <task-list :tasks="tasksOfSelectedDay"></task-list>
@@ -34,7 +33,6 @@ export default {
   name: "Fewdays",
   data() {
     return {
-      tasks: this.$store.getters["tasksModule/tasks"],
       selectedDay: null,
       selectedWeek: null,
     };
@@ -42,13 +40,17 @@ export default {
   computed: {
     // 選択された日のタスクを取得
     tasksOfSelectedDay() {
-      let tasks = this.tasks;
+      let tasks = this.$store.getters["tasksModule/tasks"];
       const that = this;
-      let result = [];
-      result = tasks.filter((el) => {
+
+      let result = tasks.filter((el) => {
         let taskDueDate = new Date(el.data.dueDate.seconds * 1000);
-        taskDueDate = taskDueDate.getDate();
-        return taskDueDate == that.selectedDay;
+        let stateDueDate = new Date(el.data.dueDate);
+
+        return (
+          taskDueDate.getDate() == that.selectedDay ||
+          stateDueDate.getDate() == that.selectedDay
+        );
       });
       return result;
     },
@@ -59,13 +61,14 @@ export default {
     },
   },
   created() {
-    const today = new Date();
     this.selectedDay = today.getDate();
 
+    // 現在の１週間を作成
+    let dayNum = today.getDay();
     let i = 0;
     this.selectedWeek = DAY.reduce((acc, el) => {
       let date = new Date();
-      date.setDate(date.getDate() + i);
+      date.setDate(date.getDate() - dayNum + i);
       let d = {
         date: date.getDate(),
         day: el,
@@ -74,7 +77,7 @@ export default {
       };
       if (d.date == todayDate) {
         d.isToday = true;
-      } else if (d.date < todayDate) {
+      } else if (date < today) {
         d.isPast = true;
       }
       acc.push(d);

@@ -1,13 +1,12 @@
 <template>
-  <ul class="task-list" v-if="hasTasks">
+  <transition-group tag="ul" class="task-list" v-if="hasTasks">
     <li class="task-item" v-for="task in tasks" :key="task.id">
       <span class="sort-icon" uk-icon="icon: move;"></span>
       <div class="task-item-inner">
         <label class="checkBox-box">
-          <input type="checkbox" @change="doneCheck(task)" />
+          <input type="checkbox" @change="doneTask(task)" />
         </label>
-
-        <div @click="openModal(task)" class="task-content">
+        <div class="task-content">
           <p>
             {{ task.data.title }}
           </p>
@@ -18,9 +17,9 @@
         </div>
       </div>
     </li>
-  </ul>
+  </transition-group>
   <div v-else>
-    <p>まだタスクが登録されていません。</p>
+    <p>タスクが登録されていません。</p>
   </div>
 </template>
 
@@ -37,10 +36,7 @@ export default {
     },
   },
   data() {
-    return {
-      modalTask: null,
-      isOpenModal: false,
-    };
+    return {};
   },
   computed: {
     hasTasks() {
@@ -52,8 +48,8 @@ export default {
   },
   methods: {
     // タスクを完了とするメソッド
-    doneCheck(task) {
-      this.$emit("done-check", task);
+    doneTask(task) {
+      this.$store.dispatch("tasksModule/doneTask", task);
     },
     // タスクの完了未完了を見るメソッド
 
@@ -69,11 +65,6 @@ export default {
         return;
       }
     },
-
-    openModal(task) {
-      this.isOpenModal = true;
-      this.modalTask = task;
-    },
   },
 };
 </script>
@@ -85,6 +76,7 @@ export default {
 .task-item {
   list-style: none;
   position: relative;
+  display: block;
 
   .sort-icon {
     display: none;
@@ -134,5 +126,25 @@ export default {
       }
     }
   }
+}
+.v-move {
+  transition: transform 1s;
+}
+.v-enter {
+  opacity: 0;
+}
+.v-enter-to {
+  opacity: 1;
+}
+.v-leave {
+  opacity: 1;
+}
+.v-leave-to {
+  opacity: 0;
+  position: absolute;
+}
+.v-enter-active,
+.v-leave-active {
+  transition: all 1s;
 }
 </style>

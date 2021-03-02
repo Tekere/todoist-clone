@@ -16,7 +16,7 @@ const getters = {
 };
 
 const mutations = {
-  setTasks(state, data) {
+  fetchTasks(state, data) {
     state.tasks.push(data);
   },
   doneTask(state, id) {
@@ -33,6 +33,18 @@ const mutations = {
 };
 
 const actions = {
+  fetchTasks({ commit }) {
+    firebase
+      .firestore()
+      .collection("tasks")
+      .get()
+      .then((response) => {
+        console.log(response);
+        response.forEach((doc) =>
+          commit("fetchTasks", { id: doc.id, data: doc.data() })
+        );
+      });
+  },
   doneTask({ commit }, { id }) {
     firebase
       .firestore()
@@ -50,18 +62,6 @@ const actions = {
       .add(newTask)
       .then((doc) => {
         commit("addTask", { id: doc.id, data: newTask });
-      });
-  },
-  fetchTasks({ commit }) {
-    firebase
-      .firestore()
-      .collection("tasks")
-      .get()
-      .then((response) => {
-        console.log(response);
-        response.forEach((doc) =>
-          commit("setTasks", { id: doc.id, data: doc.data() })
-        );
       });
   },
 };

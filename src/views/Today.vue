@@ -7,7 +7,6 @@
     </div>
     <div class="list-editor">
       <task-list :tasks="todayTasks"></task-list>
-      <pre>{{ tasks }}</pre>
     </div>
   </div>
 </template>
@@ -19,21 +18,20 @@ export default {
   components: { TaskList },
   name: "Today",
   data() {
-    return {
-      tasks: this.$store.getters["tasksModule/tasks"],
-    };
+    return {};
   },
   computed: {
     todayTasks() {
+      let tasks = this.$store.getters["tasksModule/tasks"];
       // 今日のタスクのみにする
-      return this.tasks.filter((el) => {
+      return tasks.filter((el) => {
         // gettersから取得したタイムスタンプ型の期日
-        const date = new Date(el.data.dueDate.seconds * 1000);
+        let taskDueDate = new Date(el.data.dueDate.seconds * 1000);
         // addTaskで一時的にstateに保存されているString型の期日
-        const stateDueDate = new Date(el.data.dueDate);
+        let stateDueDate = new Date(el.data.dueDate);
 
         return (
-          date.getDate() == today.getDate() ||
+          taskDueDate.getDate() == today.getDate() ||
           stateDueDate.getDate() == today.getDate()
         );
       });

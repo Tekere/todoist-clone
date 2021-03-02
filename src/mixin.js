@@ -28,22 +28,26 @@ export default {
     convertDueDate(dueDate) {
       // 今日とタスクの日付を取得
       const today = new Date();
+      const todayD = today.getDate();
       let date = null;
+      let dateD = null;
+      let tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      let tomorrowD = tomorrow.getDate();
+
       // stateから取得した場合のために型変換を2種類用意する
       if (dueDate.seconds) {
         date = new Date(dueDate.seconds * 1000);
+        dateD = date.getDate();
       } else {
         date = new Date(dueDate);
+        dateD = date.getDate();
       }
-      let todayD = today.getDate();
-      let dateD = date.getDate();
-      let tomorrow = today.setDate(today.getDate() + 1);
-      let dateTomorrow = date.setDate(date.getDate() + 1);
 
-      // 今日の日付とタスクの期日を比較して、今日なら今日 明日なら明日に変換 以外は日本語形式に変換
+      // 今日の日付とタスクの期日を比較して、今日なら今日 明日なら明日に変換 以外は日本形式に変換
       if (dateD == todayD) {
         return "今日";
-      } else if (dateTomorrow == tomorrow) {
+      } else if (dateD == tomorrowD) {
         return "明日";
       } else {
         let format = "";

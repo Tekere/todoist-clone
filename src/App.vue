@@ -77,6 +77,9 @@ export default {
 a {
   cursor: pointer;
 }
+body {
+  padding-bottom: 100px;
+}
 #app {
   font-family: "Hiragino Sans";
   -webkit-font-smoothing: antialiased;

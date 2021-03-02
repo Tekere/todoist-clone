@@ -6,10 +6,7 @@
       </div>
     </div>
     <div class="list-editor">
-      <task-list :tasks="tasks" @done-check="doneTask"></task-list>
-      <pre>{{ tasks }}</pre>
-      <pre>{{ $store.getters["tasksModule/tasks"] }}</pre>
-      <pre>{{ $store.state.tasksModule.tasks }}</pre>
+      <task-list :tasks="tasks"></task-list>
     </div>
     <div class="create-editor">
       <div v-if="createFormShow" class="create-form-editor">
@@ -60,7 +57,6 @@ export default {
   name: "Inbox",
   data() {
     return {
-      tasks: this.$store.getters["tasksModule/tasks"],
       createFormShow: false,
       formData: {
         title: "",
@@ -69,6 +65,9 @@ export default {
     };
   },
   computed: {
+    tasks() {
+      return this.$store.getters["tasksModule/tasks"];
+    },
     newTask() {
       // フォームのデータからtimestampを作成  2ヶ月くらいずれる？？
       // let date = new Date(this.formData.dueDate);
