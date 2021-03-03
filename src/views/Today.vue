@@ -8,18 +8,23 @@
     <div class="list-editor">
       <task-list :tasks="todayTasks"></task-list>
     </div>
+    <create-editor
+      :createFormShow="createFormShow"
+      @click-toggle="toggleCreateForm"
+    ></create-editor>
   </div>
 </template>
 
 <script>
-import TaskList from "../components/TaskList.vue";
+import TaskList from "../components/TaskList";
+import CreateEditor from "../components/CreateEditor";
+import Mixin from "../mixin";
 const today = new Date();
 export default {
-  components: { TaskList },
   name: "Today",
-  data() {
-    return {};
-  },
+  mixins: [Mixin],
+  components: { TaskList, CreateEditor },
+
   computed: {
     todayTasks() {
       let tasks = this.$store.getters["tasksModule/tasks"];

@@ -20,17 +20,24 @@
     <div class="list-editor">
       <task-list :tasks="tasksOfSelectedDay"></task-list>
     </div>
+    <create-editor
+      :createFormShow="createFormShow"
+      @click-toggle="toggleCreateForm"
+    ></create-editor>
   </div>
 </template>
 <script>
 import TaskList from "../components/TaskList.vue";
+import CreateEditor from "../components/CreateEditor";
+import Mixin from "../mixin";
 const DAY = ["日", "月", "火", "水", "木", "金", "土"];
 const today = new Date();
 const todayDate = today.getDate();
 
 export default {
-  components: { TaskList },
   name: "Fewdays",
+  mixins: [Mixin],
+  components: { TaskList, CreateEditor },
   data() {
     return {
       selectedDay: null,
