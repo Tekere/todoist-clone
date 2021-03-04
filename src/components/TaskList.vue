@@ -191,7 +191,7 @@ export default {
 }
 .v-leave-to {
   opacity: 0;
-  position: absolute;
+  // position: absolute;
 }
 .v-enter-active,
 .v-leave-active {

@@ -1,6 +1,6 @@
 .DS_Store
 node_modules
-memo.md
+/memo.md
 /dist
 
 

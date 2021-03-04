@@ -30,7 +30,6 @@
             </button>
           </div>
         </form>
-        <pre>{{ formData }}</pre>
       </div>
     </div>
     <div v-else @click="clickToggle" class="create-editor-inner">
@@ -41,29 +40,31 @@
 </template>
 
 <script>
+// 今日をyyyy-mm-ddを作成
+let defaultDueDate = new Date();
+let y = defaultDueDate.getFullYear();
+let m = ("00" + (defaultDueDate.getMonth() + 1)).slice(-2);
+let d = ("00" + defaultDueDate.getDate()).slice(-2);
+defaultDueDate = `${y}-${m}-${d}`;
+
 export default {
   props: {
     createFormShow: {
       type: Boolean,
     },
-  },
-
-  computed: {
-    formData() {
-      // yyyy-mm-ddを作成
-      let defaultDueDate = new Date();
-      let y = defaultDueDate.getFullYear();
-      let m = ("00" + (defaultDueDate.getMonth() + 1)).slice(-2);
-      let d = ("00" + defaultDueDate.getDate()).slice(-2);
-      defaultDueDate = `${y}-${m}-${d}`;
-      console.log(defaultDueDate);
-      return {
-        formData: {
-          title: "",
-          dueDate: defaultDueDate,
-        },
-      };
+    selectedDay: {
+      type: Number,
     },
+  },
+  data() {
+    return {
+      formData: {
+        title: "",
+        dueDate: defaultDueDate,
+      },
+    };
+  },
+  computed: {
     newTask() {
       // フォームのデータからtimestampを作成  2ヶ月くらいずれる？？
       // let date = new Date(this.formData.dueDate);
@@ -77,20 +78,28 @@ export default {
       };
     },
   },
+  watch: {
+    // 選択されているタブの日付を監視して タスク作成時のデフォルトの期日を作成する
+    selectedDay: {
+      handler(val) {
+        this.formData.dueDate = "2021-03-" + ("00" + val).slice(-2);
+      },
+    },
+  },
   methods: {
     addTask(newTask) {
       this.$store.dispatch("tasksModule/addTask", newTask);
+
+      this.resetFormData();
+      this.clickToggle();
     },
     clickToggle() {
       this.$emit("click-toggle");
     },
-    // // 今日の日付をyyyy-mm-ddの形式で作成
-    // createYMD(date) {
-    //   let y = date.getFullYear();
-    //   let m = ("00" + (date.getMonth() + 1)).slice(-2);
-    //   let d = ("00" + date.getDate()).slice(-2);
-    //   return `${y}-${m}-${d}`;
-    // },
+    // タスク追加後にフォームのデータをリセット
+    resetFormData() {
+      this.formData = { title: "", dueDate: `${y}-${m}-${d}` };
+    },
   },
 };
 </script>

@@ -21,11 +21,8 @@ const mutations = {
   },
   doneTask(state, id) {
     state.tasks = state.tasks.filter((el) => {
-      console.log(el.id);
-      console.log(id);
       return el.id != id;
     });
-    console.log(state.tasks);
   },
   addTask(state, newTask) {
     state.tasks.push(newTask);
@@ -39,7 +36,6 @@ const actions = {
       .collection("tasks")
       .get()
       .then((response) => {
-        console.log(response);
         response.forEach((doc) =>
           commit("fetchTasks", { id: doc.id, data: doc.data() })
         );

@@ -1,5 +1,3 @@
-# ここから
-
 # 残タスク
 
 defaultDueDate のバグ修正

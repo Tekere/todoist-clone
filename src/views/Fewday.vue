@@ -22,6 +22,7 @@
     </div>
     <create-editor
       :createFormShow="createFormShow"
+      :selectedDay="selectedDay"
       @click-toggle="toggleCreateForm"
     ></create-editor>
   </div>
