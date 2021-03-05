@@ -51,7 +51,8 @@ export default {
           tomorrow: false,
           expired: false,
         };
-        // 変換後の状態に応じて有効にするClassをtrueにする
+
+        // 変換後の状態に応じて有効にするClassをtrueにする;
         if (dueDate == "今日") {
           resultObj.today = true;
         } else if (dueDate == "明日") {
