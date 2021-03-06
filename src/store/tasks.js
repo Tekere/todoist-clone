@@ -7,9 +7,10 @@ const state = {
 const getters = {
   tasks(state) {
     let tasks = state.tasks;
+
     tasks.sort((a, b) => {
-      if (a.data.dueDate < b.data.dueDate) return -1;
-      if (a.data.dueDate > b.data.dueDate) return 1;
+      if (a.data.dueDate.seconds < b.data.dueDate.seconds) return -1;
+      if (a.data.dueDate.seconds > b.data.dueDate.seconds) return 1;
     });
     return tasks;
   },

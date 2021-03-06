@@ -12,17 +12,17 @@
           :class="{ 'uk-active': day.isToday, disabled: day.isPast }"
         >
           <a href="#" @click="selectDate(day.date)"
-            ><span>{{ day.day }} </span> {{ day.date }}</a
+            ><span>{{ day.day }} </span> {{ getDateFromYMD(day.date) }}</a
           >
         </li>
       </ul>
     </div>
     <div class="list-editor">
-      <task-list :tasks="tasksOfSelectedDay"></task-list>
+      <task-list :tasks="tasksOfSelectedDate"></task-list>
     </div>
     <create-editor
       :createFormShow="createFormShow"
-      :selectedDay="selectedDay"
+      :selectedDate="selectedDate"
       @click-toggle="toggleCreateForm"
     ></create-editor>
   </div>
@@ -31,6 +31,8 @@
 import TaskList from "../components/TaskList.vue";
 import CreateEditor from "../components/CreateEditor";
 import Mixin from "../mixin";
+import { formatDate, getDateFromYMD } from "../helper";
+
 const DAY = ["日", "月", "火", "水", "木", "金", "土"];
 const today = new Date();
 const todayDate = today.getDate();
@@ -38,38 +40,36 @@ const todayDate = today.getDate();
 export default {
   name: "Fewdays",
   mixins: [Mixin],
+
   components: { TaskList, CreateEditor },
   data() {
     return {
-      selectedDay: null,
+      selectedDate: null,
       selectedWeek: null,
     };
   },
   computed: {
     // 選択された日のタスクを取得
-    tasksOfSelectedDay() {
+    tasksOfSelectedDate() {
       let tasks = this.$store.getters["tasksModule/tasks"];
       const that = this;
 
       let result = tasks.filter((el) => {
         let taskDueDate = new Date(el.data.dueDate.seconds * 1000);
-        let stateDueDate = new Date(el.data.dueDate);
-
-        return (
-          taskDueDate.getDate() == that.selectedDay ||
-          stateDueDate.getDate() == that.selectedDay
-        );
+        return taskDueDate.getDate() == new Date(that.selectedDate).getDate();
       });
       return result;
     },
   },
   methods: {
     selectDate(val) {
-      this.selectedDay = val;
+      this.selectedDate = val;
     },
+    getDateFromYMD,
   },
   created() {
-    this.selectedDay = today.getDate();
+    let ymdToday = formatDate(today);
+    this.selectedDate = ymdToday;
 
     // 現在の１週間を作成
     let dayNum = today.getDay();
@@ -77,13 +77,14 @@ export default {
     this.selectedWeek = DAY.reduce((acc, el) => {
       let date = new Date();
       date.setDate(date.getDate() - dayNum + i);
+
       let d = {
-        date: date.getDate(),
+        date: formatDate(date),
         day: el,
         isToday: false,
         isPast: false,
       };
-      if (d.date == todayDate) {
+      if (new Date(d.date).getDate() == todayDate) {
         d.isToday = true;
       } else if (date < today) {
         d.isPast = true;
@@ -92,6 +93,7 @@ export default {
       i++;
       return acc;
     }, []);
+    console.log(this.selectedWeek);
   },
 };
 </script>

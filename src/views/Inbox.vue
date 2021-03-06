@@ -12,9 +12,6 @@
       :createFormShow="createFormShow"
       @click-toggle="toggleCreateForm"
     ></create-editor>
-    <pre>{{ tasks }}</pre>
-    <!-- <pre>{{ $store.getters["tasksModule/tasks"] }}</pre> -->
-    <pre>{{ $store.state.tasksModule }}</pre>
   </div>
 </template>
 

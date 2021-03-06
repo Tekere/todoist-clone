@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import { addClassDateColor } from "../helper";
 export default {
   props: {
     tasks: {
@@ -45,22 +46,7 @@ export default {
       return function (dueDate) {
         // 期日を本日、明日、期限切れに変換
         dueDate = this.convertDueDate(dueDate);
-
-        let resultObj = {
-          today: false,
-          tomorrow: false,
-          expired: false,
-        };
-
-        // 変換後の状態に応じて有効にするClassをtrueにする;
-        if (dueDate == "今日") {
-          resultObj.today = true;
-        } else if (dueDate == "明日") {
-          resultObj.tomorrow = true;
-        } else if (dueDate.match(/期限切れ/)) {
-          resultObj.expired = true;
-        }
-        return resultObj;
+        return addClassDateColor(dueDate);
       };
     },
   },
@@ -69,39 +55,20 @@ export default {
     doneTask(task) {
       this.$store.dispatch("tasksModule/doneTask", task);
     },
-    // タスクの完了未完了を見るメソッド
 
-    // 日付から特定の条件で色分けするためのメソッド
-    addClassDateColor(dueDate) {
-      if (dueDate == "今日") {
-        this.classObj.today = true;
-      } else if (dueDate == "明日") {
-        this.classObj.tomorrow = true;
-      } else if (dueDate.match(/期限切れ/)) {
-        this.classObj.expired = true;
-      } else {
-        return;
-      }
-    },
     // 日付を変換するメソッド
     convertDueDate(dueDate) {
       // 今日とタスクの日付を取得
-      const today = new Date();
-      const todayD = today.getDate();
-      let date = null;
-      let dateD = null;
+      // 今日
+      let today = new Date();
+      let todayD = today.getDate();
+      // タスクの期日
+      let date = new Date(dueDate.seconds * 1000);
+      let dateD = date.getDate();
+      // 明日
       let tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
       let tomorrowD = tomorrow.getDate();
-
-      // stateから取得した場合のために型変換を2種類用意する
-      if (dueDate.seconds) {
-        date = new Date(dueDate.seconds * 1000);
-        dateD = date.getDate();
-      } else {
-        date = new Date(dueDate);
-        dateD = date.getDate();
-      }
 
       // 今日の日付とタスクの期日を比較して、今日なら今日 明日なら明日に変換 以外は日本形式に変換
       if (dateD == todayD) {

@@ -40,20 +40,23 @@
 </template>
 
 <script>
-// 今日をyyyy-mm-ddを作成
-let defaultDueDate = new Date();
-let y = defaultDueDate.getFullYear();
-let m = ("00" + (defaultDueDate.getMonth() + 1)).slice(-2);
-let d = ("00" + defaultDueDate.getDate()).slice(-2);
-defaultDueDate = `${y}-${m}-${d}`;
+function formatDate(dt) {
+  var y = dt.getFullYear();
+  var m = ("00" + (dt.getMonth() + 1)).slice(-2);
+  var d = ("00" + dt.getDate()).slice(-2);
+  return y + "-" + m + "-" + d;
+}
+
+let today = new Date();
+let defaultDueDate = formatDate(today);
 
 export default {
   props: {
     createFormShow: {
       type: Boolean,
     },
-    selectedDay: {
-      type: Number,
+    selectedDate: {
+      type: String,
     },
   },
   data() {
@@ -65,24 +68,21 @@ export default {
     };
   },
   computed: {
+    // 登録する形でdataを作成
     newTask() {
-      // フォームのデータからtimestampを作成  2ヶ月くらいずれる？？
-      // let date = new Date(this.formData.dueDate);
-      //     date = date.getTime();
-      //     date = Math.floor(date / 1000);
-
-      // 一時的に Date型で保存
       return {
         title: this.formData.title,
-        dueDate: new Date(this.formData.dueDate),
+        dueDate: {
+          seconds: new Date(this.formData.dueDate).getTime() / 1000,
+        },
       };
     },
   },
   watch: {
     // 選択されているタブの日付を監視して タスク作成時のデフォルトの期日を作成する
-    selectedDay: {
+    selectedDate: {
       handler(val) {
-        this.formData.dueDate = "2021-03-" + ("00" + val).slice(-2);
+        this.formData.dueDate = val;
       },
     },
   },
@@ -98,7 +98,7 @@ export default {
     },
     // タスク追加後にフォームのデータをリセット
     resetFormData() {
-      this.formData = { title: "", dueDate: `${y}-${m}-${d}` };
+      this.formData = { title: "", dueDate: formatDate(today) };
     },
   },
 };
