@@ -19,7 +19,6 @@
 import TaskList from "../components/TaskList";
 import CreateEditor from "../components/CreateEditor";
 import Mixin from "../mixin";
-let today = new Date();
 
 export default {
   name: "Inbox",

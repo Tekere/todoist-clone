@@ -93,7 +93,6 @@ export default {
       i++;
       return acc;
     }, []);
-    console.log(this.selectedWeek);
   },
 };
 </script>
