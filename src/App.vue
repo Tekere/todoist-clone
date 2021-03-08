@@ -59,17 +59,17 @@
 export default {
   data() {
     return {
-      isNavShow: true,
+      isNavShow: true
     };
   },
   methods: {
     toggleNav() {
       this.isNavShow = !this.isNavShow;
-    },
+    }
   },
   created() {
-    this.$store.dispatch("tasksModule/fetchTasks");
-  },
+    this.$store.dispatch('tasksModule/fetchTasks');
+  }
 };
 </script>
 
@@ -81,7 +81,7 @@ body {
   padding-bottom: 100px;
 }
 #app {
-  font-family: "Hiragino Sans";
+  font-family: 'Hiragino Sans';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   box-sizing: border-box;

@@ -16,33 +16,33 @@
 </template>
 
 <script>
-import TaskList from "../components/TaskList";
-import CreateEditor from "../components/CreateEditor";
-import Mixin from "../mixin";
+import TaskList from '../components/TaskList';
+import CreateEditor from '../components/CreateEditor';
+import Mixin from '../mixin';
 const today = new Date();
 export default {
-  name: "Today",
+  name: 'Today',
   mixins: [Mixin],
   components: { TaskList, CreateEditor },
 
   computed: {
     todayTasks() {
-      let tasks = this.$store.getters["tasksModule/tasks"];
+      const tasks = this.$store.getters['tasksModule/tasks'];
       // 今日のタスクのみにする
-      return tasks.filter((el) => {
+      return tasks.filter(el => {
         // gettersから取得したタイムスタンプ型の期日
-        let taskDueDate = new Date(el.data.dueDate.seconds * 1000);
+        const taskDueDate = new Date(el.data.dueDate.seconds * 1000);
         // addTaskで一時的にstateに保存されているString型の期日
-        let stateDueDate = new Date(el.data.dueDate);
+        const stateDueDate = new Date(el.data.dueDate);
 
         return (
           taskDueDate.getDate() == today.getDate() ||
           stateDueDate.getDate() == today.getDate()
         );
       });
-    },
+    }
   },
-  methods: {},
+  methods: {}
 };
 </script>
 

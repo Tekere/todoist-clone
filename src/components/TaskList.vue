@@ -24,12 +24,12 @@
 </template>
 
 <script>
-import { addClassDateColor } from "../helper";
+import { addClassDateColor } from '../helper';
 export default {
   props: {
     tasks: {
-      type: Array,
-    },
+      type: Array
+    }
   },
   data() {
     return {};
@@ -43,47 +43,47 @@ export default {
     },
     // 期日の状態（本日、明日etc）によって表示の色を変更するためのプロパティ
     classObj() {
-      return function (dueDate) {
+      return function(dueDate) {
         // 期日を本日、明日、期限切れに変換
         dueDate = this.convertDueDate(dueDate);
         return addClassDateColor(dueDate);
       };
-    },
+    }
   },
   methods: {
     // タスクを完了とするメソッド
     doneTask(task) {
-      this.$store.dispatch("tasksModule/doneTask", task);
+      this.$store.dispatch('tasksModule/doneTask', task);
     },
 
     // 日付を変換するメソッド
     convertDueDate(dueDate) {
       // 今日とタスクの日付を取得
       // 今日
-      let today = new Date();
-      let todayD = today.getDate();
+      const today = new Date();
+      const todayD = today.getDate();
       // タスクの期日
-      let date = new Date(dueDate.seconds * 1000);
-      let dateD = date.getDate();
+      const date = new Date(dueDate.seconds * 1000);
+      const dateD = date.getDate();
       // 明日
-      let tomorrow = new Date();
+      const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
-      let tomorrowD = tomorrow.getDate();
+      const tomorrowD = tomorrow.getDate();
 
       // 今日の日付とタスクの期日を比較して、今日なら今日 明日なら明日に変換 以外は日本形式に変換
       if (dateD == todayD) {
-        return "今日";
+        return '今日';
       } else if (dateD == tomorrowD) {
-        return "明日";
+        return '明日';
       } else {
-        let format = "";
-        date < today ? (format = "期限切れ(MM月DD日)") : (format = "MM月DD日");
+        let format = '';
+        date < today ? (format = '期限切れ(MM月DD日)') : (format = 'MM月DD日');
         format = format.replace(/MM/, date.getMonth() + 1);
         format = format.replace(/DD/, dateD);
         return format;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

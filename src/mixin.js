@@ -2,7 +2,7 @@
 export default {
   data() {
     return {
-      createFormShow: false,
+      createFormShow: false
     };
   },
   methods: {
@@ -12,8 +12,8 @@ export default {
     },
     // タスク完了メソッド
     doneTask(task) {
-      this.$store.dispatch("tasksModule/doneTask", task);
-    },
+      this.$store.dispatch('tasksModule/doneTask', task);
+    }
     // // 今日の日付をyyyy-mm-ddの形式で作成
     // createYMD(date) {
     //   let y = date.getFullYear();
@@ -21,5 +21,5 @@ export default {
     //   let d = ("00" + date.getDate()).slice(-2);
     //   return `${y}-${m}-${d}`;
     // },
-  },
+  }
 };

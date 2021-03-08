@@ -42,29 +42,29 @@
 <script>
 function formatDate(dt) {
   var y = dt.getFullYear();
-  var m = ("00" + (dt.getMonth() + 1)).slice(-2);
-  var d = ("00" + dt.getDate()).slice(-2);
-  return y + "-" + m + "-" + d;
+  var m = ('00' + (dt.getMonth() + 1)).slice(-2);
+  var d = ('00' + dt.getDate()).slice(-2);
+  return y + '-' + m + '-' + d;
 }
 
-let today = new Date();
-let defaultDueDate = formatDate(today);
+const today = new Date();
+const defaultDueDate = formatDate(today);
 
 export default {
   props: {
     createFormShow: {
-      type: Boolean,
+      type: Boolean
     },
     selectedDate: {
-      type: String,
-    },
+      type: String
+    }
   },
   data() {
     return {
       formData: {
-        title: "",
-        dueDate: defaultDueDate,
-      },
+        title: '',
+        dueDate: defaultDueDate
+      }
     };
   },
   computed: {
@@ -73,34 +73,34 @@ export default {
       return {
         title: this.formData.title,
         dueDate: {
-          seconds: new Date(this.formData.dueDate).getTime() / 1000,
-        },
+          seconds: new Date(this.formData.dueDate).getTime() / 1000
+        }
       };
-    },
+    }
   },
   watch: {
     // 選択されているタブの日付を監視して タスク作成時のデフォルトの期日を作成する
     selectedDate: {
       handler(val) {
         this.formData.dueDate = val;
-      },
-    },
+      }
+    }
   },
   methods: {
     addTask(newTask) {
-      this.$store.dispatch("tasksModule/addTask", newTask);
+      this.$store.dispatch('tasksModule/addTask', newTask);
 
       this.resetFormData();
       this.clickToggle();
     },
     clickToggle() {
-      this.$emit("click-toggle");
+      this.$emit('click-toggle');
     },
     // タスク追加後にフォームのデータをリセット
     resetFormData() {
-      this.formData = { title: "", dueDate: formatDate(today) };
-    },
-  },
+      this.formData = { title: '', dueDate: formatDate(today) };
+    }
+  }
 };
 </script>
 

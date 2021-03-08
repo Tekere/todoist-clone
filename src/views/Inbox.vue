@@ -16,22 +16,21 @@
 </template>
 
 <script>
-import TaskList from "../components/TaskList";
-import CreateEditor from "../components/CreateEditor";
-import Mixin from "../mixin";
+import TaskList from '../components/TaskList';
+import CreateEditor from '../components/CreateEditor';
+import Mixin from '../mixin';
 
 export default {
-  name: "Inbox",
+  name: 'Inbox',
   mixins: [Mixin],
   components: { TaskList, CreateEditor },
 
   computed: {
     tasks() {
-      return this.$store.getters["tasksModule/tasks"];
-    },
-  },
+      return this.$store.getters['tasksModule/tasks'];
+    }
+  }
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

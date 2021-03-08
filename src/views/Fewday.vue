@@ -2,7 +2,7 @@
   <div class="few-days">
     <div class="header">
       <div class="header-content">
-        <h1>近日予定</h1>
+        <h1>近日予定hhh</h1>
       </div>
 
       <ul uk-tab>
@@ -28,61 +28,61 @@
   </div>
 </template>
 <script>
-import TaskList from "../components/TaskList.vue";
-import CreateEditor from "../components/CreateEditor";
-import Mixin from "../mixin";
-import { formatDate, getDateFromYMD } from "../helper";
+import TaskList from '../components/TaskList.vue';
+import CreateEditor from '../components/CreateEditor';
+import Mixin from '../mixin';
+import { formatDate, getDateFromYMD } from '../helper';
 
-const DAY = ["日", "月", "火", "水", "木", "金", "土"];
+const DAY = ['日', '月', '火', '水', '木', '金', '土'];
 const today = new Date();
 const todayDate = today.getDate();
 
 export default {
-  name: "Fewdays",
+  name: 'Fewdays',
   mixins: [Mixin],
 
   components: { TaskList, CreateEditor },
   data() {
     return {
       selectedDate: null,
-      selectedWeek: null,
+      selectedWeek: null
     };
   },
   computed: {
     // 選択された日のタスクを取得
     tasksOfSelectedDate() {
-      let tasks = this.$store.getters["tasksModule/tasks"];
+      const tasks = this.$store.getters['tasksModule/tasks'];
       const that = this;
 
-      let result = tasks.filter((el) => {
-        let taskDueDate = new Date(el.data.dueDate.seconds * 1000);
+      const result = tasks.filter(el => {
+        const taskDueDate = new Date(el.data.dueDate.seconds * 1000);
         return taskDueDate.getDate() == new Date(that.selectedDate).getDate();
       });
       return result;
-    },
+    }
   },
   methods: {
     selectDate(val) {
       this.selectedDate = val;
     },
-    getDateFromYMD,
+    getDateFromYMD
   },
   created() {
-    let ymdToday = formatDate(today);
+    const ymdToday = formatDate(today);
     this.selectedDate = ymdToday;
 
     // 現在の１週間を作成
-    let dayNum = today.getDay();
+    const dayNum = today.getDay();
     let i = 0;
     this.selectedWeek = DAY.reduce((acc, el) => {
-      let date = new Date();
+      const date = new Date();
       date.setDate(date.getDate() - dayNum + i);
 
-      let d = {
+      const d = {
         date: formatDate(date),
         day: el,
         isToday: false,
-        isPast: false,
+        isPast: false
       };
       if (new Date(d.date).getDate() == todayDate) {
         d.isToday = true;
@@ -93,7 +93,7 @@ export default {
       i++;
       return acc;
     }, []);
-  },
+  }
 };
 </script>
 
