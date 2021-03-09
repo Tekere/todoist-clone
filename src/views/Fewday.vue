@@ -2,13 +2,16 @@
   <div class="few-days">
     <div class="header">
       <div class="header-content">
-        <h1>近日予定hhh</h1>
+        <h1>近日予定</h1>
       </div>
-
+      <div class="nav-bar">
+        <a href="" @click.prevent="prevWeek">prev</a>
+        <a href="" @click.prevent="nextWeek">next</a>
+      </div>
       <ul uk-tab>
         <li
-          v-for="day in selectedWeek"
-          :key="day.date"
+          v-for="(day, index) in selectedWeek"
+          :key="index"
           :class="{ 'uk-active': day.isToday, disabled: day.isPast }"
         >
           <a href="#" @click="selectDate(day.date)"
@@ -20,6 +23,8 @@
     <div class="list-editor">
       <task-list :tasks="tasksOfSelectedDate"></task-list>
     </div>
+    <pre>{{ selectedDate }}</pre>
+    <pre>{{ selectedWeek }}</pre>
     <create-editor
       :createFormShow="createFormShow"
       :selectedDate="selectedDate"
@@ -35,7 +40,10 @@ import { formatDate, getDateFromYMD } from '../helper';
 
 const DAY = ['日', '月', '火', '水', '木', '金', '土'];
 const today = new Date();
-const todayDate = today.getDate();
+const todayDate = formatDate(today);
+const thisSunday = formatDate(
+  new Date(today.setDate(today.getDate() - today.getDay()))
+);
 
 export default {
   name: 'Fewdays',
@@ -44,8 +52,8 @@ export default {
   components: { TaskList, CreateEditor },
   data() {
     return {
-      selectedDate: null,
-      selectedWeek: null
+      selectedDate: '',
+      displaySunday: ''
     };
   },
   computed: {
@@ -59,40 +67,55 @@ export default {
         return taskDueDate.getDate() == new Date(that.selectedDate).getDate();
       });
       return result;
+    },
+    selectedWeek() {
+      // １週間を作成
+
+      let i = 0;
+      // 配列で週を生成
+      const selectedWeek = DAY.reduce((acc, el) => {
+        const date = new Date(this.displaySunday);
+        date.setDate(date.getDate() + i);
+
+        const d = {
+          date: formatDate(date),
+          day: el,
+          isToday: false,
+          isPast: false
+        };
+
+        if (d.date == todayDate) {
+          d.isToday = true;
+        } else if (date < new Date(todayDate)) {
+          d.isPast = true;
+        }
+        acc.push(d);
+        i++;
+        return acc;
+      }, []);
+      return selectedWeek;
     }
   },
   methods: {
     selectDate(val) {
       this.selectedDate = val;
     },
-    getDateFromYMD
+    getDateFromYMD,
+    prevWeek() {
+      const d = new Date(this.displaySunday);
+      d.setDate(d.getDate() - 7);
+      this.displaySunday = formatDate(new Date(d));
+    },
+    nextWeek() {
+      const d = new Date(this.displaySunday);
+      d.setDate(d.getDate() + 7);
+      this.displaySunday = formatDate(new Date(d));
+    }
   },
   created() {
-    const ymdToday = formatDate(today);
-    this.selectedDate = ymdToday;
-
-    // 現在の１週間を作成
-    const dayNum = today.getDay();
-    let i = 0;
-    this.selectedWeek = DAY.reduce((acc, el) => {
-      const date = new Date();
-      date.setDate(date.getDate() - dayNum + i);
-
-      const d = {
-        date: formatDate(date),
-        day: el,
-        isToday: false,
-        isPast: false
-      };
-      if (new Date(d.date).getDate() == todayDate) {
-        d.isToday = true;
-      } else if (date < today) {
-        d.isPast = true;
-      }
-      acc.push(d);
-      i++;
-      return acc;
-    }, []);
+    const ymdDate = formatDate(today);
+    this.selectedDate = ymdDate;
+    this.displaySunday = thisSunday;
   }
 };
 </script>
@@ -138,6 +161,12 @@ export default {
     a {
       color: #999;
     }
+  }
+}
+.nav-bar {
+  text-align: right;
+  a {
+    margin-right: 20px;
   }
 }
 </style>

@@ -1,7 +1,7 @@
 .DS_Store
 node_modules
 /memo.md
-/src/main.js
+# /src/main.js
 /dist
 
 
