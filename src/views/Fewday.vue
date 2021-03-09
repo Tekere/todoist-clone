@@ -23,8 +23,6 @@
     <div class="list-editor">
       <task-list :tasks="tasksOfSelectedDate"></task-list>
     </div>
-    <pre>{{ selectedDate }}</pre>
-    <pre>{{ selectedWeek }}</pre>
     <create-editor
       :createFormShow="createFormShow"
       :selectedDate="selectedDate"
@@ -52,7 +50,7 @@ export default {
   components: { TaskList, CreateEditor },
   data() {
     return {
-      selectedDate: '',
+      selectedDate: todayDate,
       displaySunday: ''
     };
   },
@@ -61,11 +59,11 @@ export default {
     tasksOfSelectedDate() {
       const tasks = this.$store.getters['tasksModule/tasks'];
       const that = this;
-
       const result = tasks.filter(el => {
         const taskDueDate = new Date(el.data.dueDate.seconds * 1000);
-        return taskDueDate.getDate() == new Date(that.selectedDate).getDate();
+        return formatDate(taskDueDate) == that.selectedDate;
       });
+      console.log(result);
       return result;
     },
     selectedWeek() {
@@ -113,8 +111,7 @@ export default {
     }
   },
   created() {
-    const ymdDate = formatDate(today);
-    this.selectedDate = ymdDate;
+    this.selectedDate = todayDate;
     this.displaySunday = thisSunday;
   }
 };
