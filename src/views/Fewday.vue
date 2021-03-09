@@ -37,6 +37,7 @@ import Mixin from '../mixin';
 import { formatDate, getDateFromYMD } from '../helper';
 
 const DAY = ['日', '月', '火', '水', '木', '金', '土'];
+const WEEK_NUM = 7;
 const today = new Date();
 const todayDate = formatDate(today);
 const thisSunday = formatDate(
@@ -75,19 +76,19 @@ export default {
         const date = new Date(this.displaySunday);
         date.setDate(date.getDate() + i);
 
-        const d = {
+        const displayDateObj = {
           date: formatDate(date),
           day: el,
           isToday: false,
           isPast: false
         };
 
-        if (d.date == todayDate) {
-          d.isToday = true;
+        if (displayDateObj.date == todayDate) {
+          displayDateObj.isToday = true;
         } else if (date < new Date(todayDate)) {
-          d.isPast = true;
+          displayDateObj.isPast = true;
         }
-        acc.push(d);
+        acc.push(displayDateObj);
         i++;
         return acc;
       }, []);
@@ -100,14 +101,14 @@ export default {
     },
     getDateFromYMD,
     prevWeek() {
-      const d = new Date(this.displaySunday);
-      d.setDate(d.getDate() - 7);
-      this.displaySunday = formatDate(new Date(d));
+      const currentDisplaySunday = new Date(this.displaySunday);
+      currentDisplaySunday.setDate(currentDisplaySunday.getDate() - WEEK_NUM);
+      this.displaySunday = formatDate(new Date(currentDisplaySunday));
     },
     nextWeek() {
-      const d = new Date(this.displaySunday);
-      d.setDate(d.getDate() + 7);
-      this.displaySunday = formatDate(new Date(d));
+      const currentDisplaySunday = new Date(this.displaySunday);
+      currentDisplaySunday.setDate(currentDisplaySunday.getDate() + WEEK_NUM);
+      this.displaySunday = formatDate(new Date(currentDisplaySunday));
     }
   },
   created() {
